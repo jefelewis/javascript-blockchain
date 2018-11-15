@@ -9,12 +9,23 @@ class Block {
     this.data = data;
     this.previousHash = previousHash;
     this.hash = this.calculateHash();
+    // Adds Random Factor For Security
+    this.nonce = 0;
   }
 
   // Calculate Hash
   calculateHash() {
-    return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
+    return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString();
   }
+
+  mineBlock(difficulty) {
+    while(this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+      this.nonce++;
+      this.hash = this.calculateHash();
+    }
+    console.log('Block Mined: ' + this.hash);
+  }
+
 }
 
 // Blockchain
@@ -22,6 +33,7 @@ class Blockchain {
   constructor() {
     this.chain = [];
     this.chain[0] = this.createGenesisBlock();
+    this.difficulty = 4;
   }
 
   // Create First Block In Blockchain
@@ -40,7 +52,8 @@ class Blockchain {
     // Get Hash From Previous Block
     newBlock.previousHash = this.getLastBlock().hash;
     // Recalculate Hash
-    newBlock.hash = newBlock.calculateHash();
+    // newBlock.hash = newBlock.calculateHash();
+    newBlock.mineBlock(this.difficulty)
     // Add Block To Blockchain
     this.chain.push(newBlock);
   }
@@ -73,7 +86,9 @@ class Blockchain {
 let javascriptBlockchain = new Blockchain();
 
 // Add Data Blocks
+console.log('Mining Block 1 🤙')
 javascriptBlockchain.addBlock(new Block(1, "04/20/2020", { amount: 100 }));
+console.log('Mining Block 2 🤙')
 javascriptBlockchain.addBlock(new Block(2, "07/01/2021", { amount: 500 }));
 
 // View Blockchain Data
