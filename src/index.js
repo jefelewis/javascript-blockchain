@@ -61,6 +61,9 @@ class Blockchain {
         return false;
       }
     }
+
+    // Return True
+    return true;
   }
 }
 
