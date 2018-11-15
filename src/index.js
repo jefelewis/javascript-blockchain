@@ -20,7 +20,8 @@ class Block {
 // Blockchain
 class Blockchain {
   constructor() {
-    this.chain = [this.createGenesisBlock()];
+    this.chain = [];
+    this.chain[0] = this.createGenesisBlock();
   }
 
   // Create First Block In Blockchain
