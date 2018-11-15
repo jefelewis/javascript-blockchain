@@ -13,7 +13,7 @@ class Block {
 
   // Calculate Hash
   calculateHash() {
-    return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString()
+    return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
   }
 }
 
@@ -25,7 +25,7 @@ class Blockchain {
 
   // Create First Block In Blockchain
   createGenesisBlock() {
-    return new Block (0, "01/01/2018", "Genesis Block", "0");
+    return new Block(0, "01/01/2018", "Genesis Block", "0");
   }
 
   // Get Last Block
@@ -35,18 +35,19 @@ class Blockchain {
   }
 
   // Add Block
-  addBlock(block) {
+  addBlock(newBlock) {
     // Get Hash From Previous Block
-    block.previousHash = this.getLastBlock().hash;
+    newBlock.previousHash = this.getLastBlock().hash;
     // Recalculate Hash
-    block.hash = block.calculateHash();
+    newBlock.hash = newBlock.calculateHash();
     // Add Block To Blockchain
-    this.chain.push(block);
+    this.chain.push(newBlock);
   }
 
   // Check Blockchain Validity
-  isChainValid() {
-    for (let i = 0; i < this.chain.length; i++) {
+  isBlockchainValid() {
+    // Iterate Over The Blockchain, Starting After The Genesis Block/Index 1
+    for (let i = 1; i < this.chain.length; i++) {
       const currentBlock = this.chain[i];
       const previousBlock = this.chain[i - 1];
 
@@ -68,11 +69,11 @@ class Blockchain {
 let javascriptBlockchain = new Blockchain();
 
 // Add Data Blocks
-javascriptBlockchain.addBlock(1, "04/20/2020", { amount: 100 });
-javascriptBlockchain.addBlock(2, "07/01/2021", { amount: 500 });
+javascriptBlockchain.addBlock(new Block(1, "04/20/2020", { amount: 100 }));
+javascriptBlockchain.addBlock(new Block(2, "07/01/2021", { amount: 500 }));
 
 // View Blockchain Data
 console.log(JSON.stringify(javascriptBlockchain, null, 4));
 
 // Test Blockchain Validity
-console.log('Blockchain Valid: ' + javascriptBlockchain.isChainValid());
+console.log('Blockchain Valid: ' + javascriptBlockchain.isBlockchainValid());
