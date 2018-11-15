@@ -1,12 +1,20 @@
 // Imports: Dependencies
 const SHA256 = require('crypto-js/sha256');
 
+// Transaction
+class Transaction {
+  constructor(fromAddress, toAddress, amount) {
+    this.fromAddress = fromAddress;
+    this.toAddress = toAddress;
+    this.amount = amount;
+  }
+}
+
 // Block
 class Block {
-  constructor(index, timestamp, data, previousHash = '') {
-    this.index = index;
+  constructor(timestamp, transactions, previousHash = '') {
     this.timestamp = timestamp;
-    this.data = data;
+    this.transactions = transactions;
     this.previousHash = previousHash;
     this.hash = this.calculateHash();
     // Adds Random Factor For Security
@@ -15,11 +23,12 @@ class Block {
 
   // Calculate Hash
   calculateHash() {
-    return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString();
+    return SHA256(this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString();
   }
 
   mineBlock(difficulty) {
-    while(this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+    while(this.hash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
+      // Ad
       this.nonce++;
       this.hash = this.calculateHash();
     }
@@ -38,7 +47,7 @@ class Blockchain {
 
   // Create First Block In Blockchain
   createGenesisBlock() {
-    return new Block(0, "01/01/2018", "Genesis Block", "0");
+    return new Block('01/01/2018', 'Genesis Block', '0');
   }
 
   // Get Last Block
@@ -85,14 +94,14 @@ class Blockchain {
 // Create Blockchain Instance
 let javascriptBlockchain = new Blockchain();
 
-// Add Data Blocks
-console.log('Mining Block 1 🤙')
-javascriptBlockchain.addBlock(new Block(1, "04/20/2020", { amount: 100 }));
-console.log('Mining Block 2 🤙')
-javascriptBlockchain.addBlock(new Block(2, "07/01/2021", { amount: 500 }));
+// // Add Data Blocks
+// console.log('Mining Block 1 🤙')
+// javascriptBlockchain.addBlock(new Block('04/20/2020', { amount: 100 }));
+// console.log('Mining Block 2 🤙')
+// javascriptBlockchain.addBlock(new Block('07/01/2021', { amount: 500 }));
 
-// View Blockchain Data
-console.log(JSON.stringify(javascriptBlockchain, null, 4));
+// // View Blockchain Data
+// console.log(JSON.stringify(javascriptBlockchain, null, 4));
 
-// Test Blockchain Validity
-console.log('Blockchain Valid: ' + javascriptBlockchain.isBlockchainValid());
+// // Test Blockchain Validity
+// console.log('Blockchain Valid: ' + javascriptBlockchain.isBlockchainValid());
