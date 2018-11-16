@@ -60,7 +60,8 @@ class Blockchain {
   createGenesisBlock() {
     try {
       return new Block('01/01/2018', 'Genesis Block', '0');
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
     }
   }
@@ -70,7 +71,8 @@ class Blockchain {
     try {
       // Return Last Element
       return this.chain[this.chain.length - 1];
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
     }
   }
@@ -102,7 +104,8 @@ class Blockchain {
       this.pendingTransactions = [
         new Transaction(null, miningRewardAddress, this.miningReward),
       ];
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
     }
   }
@@ -112,7 +115,8 @@ class Blockchain {
     try {
       // Add To Pending Transactions
       this.pendingTransactions.push(transaction);
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
     }
   }
@@ -164,7 +168,8 @@ class Blockchain {
 
       // Return True
       return true;
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
     }
   }
