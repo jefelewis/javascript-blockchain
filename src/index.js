@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 // Imports: Dependencies
 const SHA256 = require('crypto-js/sha256');
 
