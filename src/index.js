@@ -25,7 +25,8 @@ class Block {
   calculateHash() {
     try {
       return SHA256(this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString();
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
     }
   }
@@ -38,7 +39,8 @@ class Block {
         this.hash = this.calculateHash();
       }
       console.log(`Block Mined: ${this.hash}`);
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
     }
   }
