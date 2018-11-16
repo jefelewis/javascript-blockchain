@@ -42,7 +42,9 @@ class Blockchain {
   constructor() {
     this.chain = [];
     this.chain[0] = this.createGenesisBlock();
-    this.difficulty = 4;
+    this.difficulty = 2;
+    this.pendingTransactions = [];
+    this.miningReward = 100;
   }
 
   // Create First Block In Blockchain
@@ -56,15 +58,58 @@ class Blockchain {
     return this.chain[this.chain.length - 1];
   }
 
-  // Add Block
-  addBlock(newBlock) {
-    // Get Hash From Previous Block
-    newBlock.previousHash = this.getLastBlock().hash;
-    // Recalculate Hash
-    // newBlock.hash = newBlock.calculateHash();
-    newBlock.mineBlock(this.difficulty)
+  // // Add Block
+  // addBlock(newBlock) {
+  //   // Get Hash From Previous Block
+  //   newBlock.previousHash = this.getLastBlock().hash;
+  //   // Recalculate Hash
+  //   // newBlock.hash = newBlock.calculateHash();
+  //   newBlock.mineBlock(this.difficulty)
+  //   // Add Block To Blockchain
+  //   this.chain.push(newBlock);
+  // }
+
+  // Mine Pending Transactions
+  minePendingTransactions(miningRewardAddress) {
+    let block = new Block(Date.now(), this.pendingTransactions);
+    
+    // Mine Block
+    block.mineBlock(this.difficulty);
+    console.log('Block successfully mined');
+
     // Add Block To Blockchain
-    this.chain.push(newBlock);
+    this.chain.push(block)
+
+    // Reset Pending Transactions
+    this.pendingTransactions = [
+      new Transaction(null, miningRewardAddress, this.miningReward)
+    ];
+  }
+
+  // Create Transaction
+  createTransaction(transaction) {
+    // Add To Pending Transactions
+    this.pendingTransactions.push(transaction)
+  }
+
+  // Get Account Balance
+  getAccountBalance(address) {
+    let balance = 0;
+
+    // Iterate Over Blockchain
+    for (const block of this.chain) {
+      for (const trans of block.transactions) {
+        if (trans.fromAddress === address) {
+          balance -= trans.amount;
+        }
+        if (trans.toAddress === address) {
+          balance += trans.amount;
+        }
+      }
+    }
+    
+    // Return Balance
+    return balance;
   }
 
   // Check Blockchain Validity
@@ -91,8 +136,8 @@ class Blockchain {
 }
 
 
-// Create Blockchain Instance
-let javascriptBlockchain = new Blockchain();
+// // Create Blockchain Instance
+// let javascriptBlockchain = new Blockchain();
 
 // // Add Data Blocks
 // console.log('Mining Block 1 🤙')
@@ -105,3 +150,20 @@ let javascriptBlockchain = new Blockchain();
 
 // // Test Blockchain Validity
 // console.log('Blockchain Valid: ' + javascriptBlockchain.isBlockchainValid());
+
+
+
+
+// Create Blockchain Instance
+let javascriptBlockchain = new Blockchain();
+
+javascriptBlockchain.createTransaction(new Transaction('04/20/2020', { amount: 100 }));
+javascriptBlockchain.createTransaction(new Transaction('07/01/2021', { amount: 500 }));
+
+console.log('Starting Miner');
+javascriptBlockchain.minePendingTransactions('Jeff')
+console.log('Jeff\'s Balance: ' + javascriptBlockchain.getAccountBalance('Jeff'));
+
+console.log('Starting Miner Again');
+javascriptBlockchain.minePendingTransactions('Jeff')
+console.log('Jeff\'s Balance: ' + javascriptBlockchain.getAccountBalance('Jeff'));
