@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 // Imports: Dependencies
 const SHA256 = require('crypto-js/sha256');
 
@@ -25,8 +26,7 @@ class Block {
   calculateHash() {
     try {
       return SHA256(this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString();
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   }
@@ -35,12 +35,11 @@ class Block {
   mineBlock(difficulty) {
     try {
       while (this.hash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
-        this.nonce ++;
+        this.nonce++;
         this.hash = this.calculateHash();
       }
       console.log(`Block Mined: ${this.hash}`);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   }
@@ -60,8 +59,7 @@ class Blockchain {
   createGenesisBlock() {
     try {
       return new Block('01/01/2018', 'Genesis Block', '0');
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   }
@@ -71,8 +69,7 @@ class Blockchain {
     try {
       // Return Last Element
       return this.chain[this.chain.length - 1];
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   }
@@ -92,20 +89,19 @@ class Blockchain {
   minePendingTransactions(miningRewardAddress) {
     try {
       const block = new Block(Date.now(), this.pendingTransactions);
-  
+
       // Mine Block
       block.mineBlock(this.difficulty);
       console.log('Block successfully mined');
-  
+
       // Add Block To Blockchain
       this.chain.push(block);
-  
+
       // Reset Pending Transactions
       this.pendingTransactions = [
         new Transaction(null, miningRewardAddress, this.miningReward),
       ];
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   }
@@ -115,8 +111,7 @@ class Blockchain {
     try {
       // Add To Pending Transactions
       this.pendingTransactions.push(transaction);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   }
@@ -124,8 +119,9 @@ class Blockchain {
   // Get Account Balance
   getAccountBalance(address) {
     try {
+      // Beginning Balance
       let balance = 0;
-  
+
       // Iterate Over Blockchain
       for (const block of this.chain) {
         for (const trans of block.transactions) {
@@ -137,9 +133,9 @@ class Blockchain {
           }
         }
       }
-  
-    // Return Balance
-    return balance;
+
+      // Return Balance
+      return balance;
     }
     catch (error) {
       console.log(error);
@@ -153,22 +149,21 @@ class Blockchain {
       for (let i = 1; i < this.chain.length; i++) {
         const currentBlock = this.chain[i];
         const previousBlock = this.chain[i - 1];
-  
+
         // Compare Hashes
         if (currentBlock.hash !== currentBlock.calculateHash()) {
           return false;
         }
-  
+
         //  Compare Previous Hash
         if (currentBlock.previousHash !== previousBlock.hash) {
           return false;
         }
       }
-  
+
       // Return True
       return true;
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   }
